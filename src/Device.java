@@ -34,4 +34,24 @@ public class Device {
         return outputTypes.get(type);
     }
 
+    public void getString() {
+        System.out.println("Device Name: " + name);
+        System.out.println("Device Id: " + id);
+        for(String key : outputTypes.keySet()) {
+            System.out.println("Output name: " + key);
+            OutputType temp = outputTypes.get(key);
+            System.out.println();
+            if(temp.isNumeric()) {
+                System.out.println(key + " value bounds:");
+                System.out.println("    Lower Bound: " + temp.getLower());
+                System.out.println("    Upper Bound " + temp.getUpper());
+            } else {
+                System.out.println(key + " category dedicated values: ");
+                for(String s : temp.getCategories()) {
+                    System.out.println("    ~" + s);
+                }
+            }
+        }
+    }
+
 }

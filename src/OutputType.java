@@ -38,4 +38,5 @@ public class OutputType {
     public List<String> getCategories() {
         return categoryValues;
     }
+
 }

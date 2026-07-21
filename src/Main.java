@@ -3,26 +3,37 @@ import java.util.*;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        // list of devices that will hold rules of what a device is composed including their types of outputs
         List<Device> deviceList = new ArrayList<>();
+        // Begins the setup of the devices the user would like to simulate
         deviceSetups(deviceList);
+        for(Device d : deviceList) {
+            d.getString();
+        }
     }
 
     private static void deviceSetups(List<Device> deviceList) {
         Scanner in = new Scanner(System.in);
         System.out.print("Number of devices: ");
+        // stores the number of devices the user wants to create / simulate
         int num = Integer.parseInt(in.nextLine());
         System.out.println("Number of devices: " + num);
         // create a device: name, id, type -> [l,u]
         for(int i = 0; i < num; i++) {
             System.out.print("Device Name: ");
+            // gets the name of the currently created device
             String name = in.nextLine();
             System.out.print("Number of Device output types: ");
+            // gets the number of outputs for the device
             int numTypes = Integer.parseInt(in.nextLine());
+            // Creates a new device with its name and id
             Device temp = new Device(name, i);
             for(int j = 0; j < numTypes; j++) {
+                //sets up each
                 outputSetups(temp, in);
             }
 
+            deviceList.add(temp);
         }
     }
 
@@ -38,7 +49,16 @@ public class Main {
 
             if(type.equals("1")) {
                 // build categorical frame
-                
+                // list of possible vals for current category type
+                List<String> categoryVals = new ArrayList<>();
+                System.out.print("Enter number of possible values for category: ");
+                int numPossible = Integer.parseInt(in.nextLine());
+                for(int i = 0; i < numPossible; i++) {
+                    System.out.print("Enter categorical value " + (i + 1) + ": ");
+                    categoryVals.add(in.nextLine());
+                }
+
+                temp.addCategoricOutput(name, categoryVals);
                 return;
             } else if(type.equals("2")) {
                 // build numerical frame
