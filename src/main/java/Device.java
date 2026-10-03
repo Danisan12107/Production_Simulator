@@ -54,4 +54,8 @@ public class Device {
         }
     }
 
+    public Set<String> getOutputNames() {
+        return Collections.unmodifiableSet(outputTypes.keySet());
+    }
+
 }

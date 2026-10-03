@@ -1,4 +1,8 @@
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -10,6 +14,33 @@ public class Main {
         for(Device d : deviceList) {
             d.getString();
         }
+
+        Simulator(deviceList);
+
+//        String sql = "SELECT * FROM Devices";
+//
+//        try (
+//                Connection connection = DatabaseManager.getConnection();
+//                Statement statement = connection.createStatement();
+//                ResultSet result = statement.executeQuery(sql)
+//        ) {
+//
+//            System.out.println("Connected successfully!");
+//            System.out.println("Database: " + connection.getCatalog());
+//
+//            while (result.next()) {
+//
+//                int id = result.getInt("device_id");
+//                String name = result.getString("device_name");
+//                System.out.println(id + " | " + name + " | ");
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
+        // sql setup
+        
     }
 
     private static void deviceSetups(List<Device> deviceList) {

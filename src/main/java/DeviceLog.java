@@ -2,15 +2,6 @@ import java.util.*;
 import java.sql.Timestamp;
 
 public class DeviceLog {
-    /* DeviceLog will store:
-        -id
-        -name
-        -TimeStamp
-        -Status
-        -outputs:
-            -output category / name
-            -output value
-     */
     private int id;
     private String name;
     private Timestamp ts;
