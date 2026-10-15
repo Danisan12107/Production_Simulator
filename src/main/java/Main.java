@@ -6,7 +6,7 @@ import java.sql.SQLException;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException{
         // list of devices that will hold rules of what a device is composed including their types of outputs
         List<Device> deviceList = new ArrayList<>();
         // Begins the setup of the devices the user would like to simulate
@@ -15,35 +15,11 @@ public class Main {
             d.getString();
         }
 
-        Simulator(deviceList);
+        Simulator sim = new Simulator(deviceList);
 
-//        String sql = "SELECT * FROM Devices";
-//
-//        try (
-//                Connection connection = DatabaseManager.getConnection();
-//                Statement statement = connection.createStatement();
-//                ResultSet result = statement.executeQuery(sql)
-//        ) {
-//
-//            System.out.println("Connected successfully!");
-//            System.out.println("Database: " + connection.getCatalog());
-//
-//            while (result.next()) {
-//
-//                int id = result.getInt("device_id");
-//                String name = result.getString("device_name");
-//                System.out.println(id + " | " + name + " | ");
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-        // sql setup
-        
     }
 
-    private static void deviceSetups(List<Device> deviceList) {
+    private static void deviceSetups(List<Device> deviceList) throws SQLException {
         Scanner in = new Scanner(System.in);
         System.out.print("Number of devices: ");
         // stores the number of devices the user wants to create / simulate
@@ -57,12 +33,15 @@ public class Main {
             System.out.print("Number of Device output types: ");
             // gets the number of outputs for the device
             int numTypes = Integer.parseInt(in.nextLine());
-            // Creates a new device with its name and id
-            Device temp = new Device(name, i);
-            for(int j = 0; j < numTypes; j++) {
-                //sets up each
-                outputSetups(temp, in);
-            }
+            // Creates a new device with its name
+            Device temp = new Device(name);
+            DeviceRepository repo = new DeviceRepository();
+            repo.insertDevice(temp);
+//
+//            for(int j = 0; j < numTypes; j++) {
+//                //sets up each
+//                outputSetups(temp, in);
+//            }
 
             deviceList.add(temp);
         }

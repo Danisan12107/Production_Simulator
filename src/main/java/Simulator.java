@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 public class Simulator {
     private List<Device> deviceList;
-    private Simulator(List<Device> list) {
+    public Simulator(List<Device> list) {
         deviceList = list;
     }
 

@@ -1,12 +1,11 @@
 import java.util.*;
 public class Device {
     private String name;
-    private int id;
+    private Integer id;
     // will store category type and lower and upper bounds of cat.
     private Map<String, OutputType> outputTypes;
-    public Device(String name, int id) {
+    public Device(String name) {
         this.name = name;
-        this.id = id;
         outputTypes = new HashMap<>();
     }
 
@@ -14,8 +13,12 @@ public class Device {
         return name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void addNumericOutput(String type, int lower, int upper) {
