@@ -25,8 +25,8 @@ public class Device {
         outputTypes.put(type, OutputType.numeric(lower, upper));
     }
 
-    public void addCategoricOutput(String type, List<String> val) {
-        outputTypes.put(type, OutputType.category(val));
+    public void addCategoricOutput(String name, List<String> val) {
+        outputTypes.put(name, OutputType.category(val));
     }
 
     public OutputType getOutput(String type) {

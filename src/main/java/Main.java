@@ -1,7 +1,4 @@
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.*;
-import java.sql.Connection;
 import java.sql.SQLException;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -12,14 +9,17 @@ public class Main {
         // Begins the setup of the devices the user would like to simulate
         deviceSetups(deviceList);
         for(Device d : deviceList) {
+
             d.getString();
+            deviceInfoInsert(d);
+
         }
 
         Simulator sim = new Simulator(deviceList);
 
     }
 
-    private static void deviceSetups(List<Device> deviceList) throws SQLException {
+    private static void deviceSetups(List<Device> deviceList) {
         Scanner in = new Scanner(System.in);
         System.out.print("Number of devices: ");
         // stores the number of devices the user wants to create / simulate
@@ -35,18 +35,17 @@ public class Main {
             int numTypes = Integer.parseInt(in.nextLine());
             // Creates a new device with its name
             Device temp = new Device(name);
-            DeviceRepository repo = new DeviceRepository();
-            repo.insertDevice(temp);
-//
-//            for(int j = 0; j < numTypes; j++) {
-//                //sets up each
-//                outputSetups(temp, in);
-//            }
+            for(int j = 0; j < numTypes; j++) {
+                //sets up each
+                outputSetups(temp, in);
+            }
 
             deviceList.add(temp);
         }
     }
 
+    // notes:
+    // create new repo to handle the inserts of rules and the getting of rules of a device
     private static void outputSetups(Device temp,Scanner in) {
         // get type: 1 -> category, 2 -> numeric
         while(true) {
@@ -65,7 +64,8 @@ public class Main {
                 int numPossible = Integer.parseInt(in.nextLine());
                 for(int i = 0; i < numPossible; i++) {
                     System.out.print("Enter categorical value " + (i + 1) + ": ");
-                    categoryVals.add(in.nextLine());
+                    String res = in.nextLine();
+                    categoryVals.add(res);
                 }
 
                 temp.addCategoricOutput(name, categoryVals);
@@ -80,6 +80,27 @@ public class Main {
                 return;
             } else {
                 System.out.println("Entered wrong input try again!");
+            }
+        }
+    }
+
+    private static void deviceInfoInsert(Device device) throws SQLException{
+        DeviceRepository dRepo = new DeviceRepository();
+        dRepo.insertDevice(device);
+        RuleRepository rRepo = new RuleRepository();
+        Set<String> keys = device.getOutputNames();
+        for(String name : keys) {
+            // res -> contians the list of values of possible outputs of a category
+            OutputType res = device.getOutput(name);
+            if (res.isCategory()) {
+                // insert cat rule
+                    //things to send:
+                        // id
+                        // output_name
+                        // list of values possible for categorical output ~ rule repo will handle the insert of each output
+                rRepo.insertCatRule(device.getId(), name, res.getCategories());
+            } else {
+                rRepo.insertNumRule(device.getId(),name, res.getLower(), res.getUpper());
             }
         }
     }
