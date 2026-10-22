@@ -54,7 +54,7 @@ public class RuleRepository {
             try(PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setInt(1, id);
                 stmt.setString(2, outputName);
-                stmt.setString(3, "Numerical");
+                stmt.setString(3, "Numeric");
                 stmt.setInt(4, low);
                 stmt.setInt(5, high);
                 stmt.executeUpdate();

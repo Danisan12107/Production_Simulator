@@ -1,9 +1,8 @@
 import java.util.*;
 import java.sql.SQLException;
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
-    public static void main(String[] args) throws SQLException{
+    static void main(String[] args) throws SQLException{
         // list of devices that will hold rules of what a device is composed including their types of outputs
         List<Device> deviceList = new ArrayList<>();
         // Begins the setup of the devices the user would like to simulate
@@ -18,6 +17,7 @@ public class Main {
         Simulator sim = new Simulator(deviceList);
 
     }
+
 
     private static void deviceSetups(List<Device> deviceList) {
         Scanner in = new Scanner(System.in);
