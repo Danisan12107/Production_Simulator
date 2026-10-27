@@ -11,7 +11,7 @@ public class RuleRepository {
             """;
 
         String sql2 = """
-            INSERT INTO CategoricalOutputValues(rule_id, category_value)
+            INSERT INTO CategoricalValues(rule_id, category_value)
             VALUES(?, ?)
             """;
 
