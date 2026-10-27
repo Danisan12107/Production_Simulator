@@ -53,6 +53,7 @@ public class DeviceRepository {
                 temp.setId(id);
                 // now we need to add rules
                 extractRules(temp);
+                extractedDevices.add(temp);
             }
         }
 
@@ -62,24 +63,52 @@ public class DeviceRepository {
 
     private void extractRules(Device device) throws SQLException {
         String sql = """
-                SELECT output_name, output_type, lower_bound, upper_bound
+                SELECT rule_id, output_name, output_type, lower_bound, upper_bound
                 FROM OutputRules
                 WHERE device_id = ?
                 """;
         try(
                 Connection connection = DatabaseManager.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery();
         ) {
-            String type = rs.getString("output_type");
-            if(type.equals("Numeric")) {
-                int lower = rs.getInt("lower_bound");
-                int upper = rs.getInt("upper_bound");
-                String oName = rs.getString("output_name");
-                device.addNumericOutput(oName, lower, upper);
-            } else {
-                // Categorical case
+            stmt.setInt(1, device.getId());
+            try(ResultSet rs = stmt.executeQuery()) {
+                while(rs.next()) {
+                    String type = rs.getString("output_type");
+                    String oName = rs.getString("output_name");
+                    if(type.equals("Numeric")) {
+                        int lower = rs.getInt("lower_bound");
+                        int upper = rs.getInt("upper_bound");
+                        device.addNumericOutput(oName, lower, upper);
+                    } else {
+                        //categorical case
+                        int ruleId = rs.getInt("rule_id");
+                        device.addCategoricOutput(oName, categoricalRuleExtraction(ruleId));
+                    }
+                }
             }
         }
+    }
+
+    private List<String> categoricalRuleExtraction(int ruleId) throws SQLException {
+        List<String> list = new ArrayList<>();
+        String sql = """
+                SELECT category_value
+                FROM CategoricalValues
+                WHERE rule_id = ?
+                """;
+        try(
+                Connection connection = DatabaseManager.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+        ) {
+            stmt.setInt(1, ruleId);
+            try(ResultSet rs = stmt.executeQuery()) {
+                while(rs.next()) {
+                    list.add(rs.getString("category_value"));
+                }
+            }
+        }
+
+        return list;
     }
 }
