@@ -1,12 +1,16 @@
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 public class Simulator {
     private List<Device> deviceList;
-    public Simulator(List<Device> list) {
-        deviceList = list;
+    private LogRepository lRepo;
+    public Simulator() throws SQLException {
+        DeviceRepository repo = new DeviceRepository();
+        deviceList = repo.extractDevices();
+        lRepo = new LogRepository();
     }
 
-    public void run() {
+    public void run() throws SQLException {
         for (Device D : deviceList) {
             //get name
             String name = D.getName();
@@ -15,9 +19,11 @@ public class Simulator {
                 if(out.isNumeric()) {
                     // numeric behavior
                     int generate = generateNum(out);
+                    lRepo.insertLog(D,outName, generate);
                 } else {
                     // categorical behavior
                     String generate = generateCat(out);
+                    lRepo.insertLog(D,outName, generate);
                 }
             }
             //for each output type within a device generate a value from

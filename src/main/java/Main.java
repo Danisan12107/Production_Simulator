@@ -14,8 +14,9 @@ public class Main {
 
         }
 
-        Simulator sim = new Simulator(deviceList);
 
+        Simulator sim = new Simulator();
+        sim.run();
     }
 
 

@@ -36,7 +36,7 @@ public class DeviceRepository {
         }
     }
 
-    public List<Device> extractDevice() throws SQLException{
+    public List<Device> extractDevices() throws SQLException{
         List<Device> extractedDevices = new ArrayList<>();
         String sql = """
                 SELECT * FROM Devices
@@ -52,7 +52,7 @@ public class DeviceRepository {
                 Device temp = new Device(name);
                 temp.setId(id);
                 // now we need to add rules
-                extractRules(temp);
+                extractRules(temp, connection);
                 extractedDevices.add(temp);
             }
         }
@@ -61,14 +61,13 @@ public class DeviceRepository {
         return extractedDevices;
     }
 
-    private void extractRules(Device device) throws SQLException {
+    private void extractRules(Device device, Connection connection) throws SQLException {
         String sql = """
                 SELECT rule_id, output_name, output_type, lower_bound, upper_bound
                 FROM OutputRules
                 WHERE device_id = ?
                 """;
         try(
-                Connection connection = DatabaseManager.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(sql);
         ) {
             stmt.setInt(1, device.getId());
@@ -83,14 +82,14 @@ public class DeviceRepository {
                     } else {
                         //categorical case
                         int ruleId = rs.getInt("rule_id");
-                        device.addCategoricOutput(oName, categoricalRuleExtraction(ruleId));
+                        device.addCategoricOutput(oName, categoricalRuleExtraction(ruleId, connection));
                     }
                 }
             }
         }
     }
 
-    private List<String> categoricalRuleExtraction(int ruleId) throws SQLException {
+    private List<String> categoricalRuleExtraction(int ruleId, Connection connection) throws SQLException {
         List<String> list = new ArrayList<>();
         String sql = """
                 SELECT category_value
@@ -98,7 +97,6 @@ public class DeviceRepository {
                 WHERE rule_id = ?
                 """;
         try(
-                Connection connection = DatabaseManager.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(sql);
         ) {
             stmt.setInt(1, ruleId);
